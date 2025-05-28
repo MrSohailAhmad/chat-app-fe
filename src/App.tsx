@@ -1,13 +1,14 @@
-import { useEffect, useState } from "react";
-import "./App.css";
+import { Loader } from "lucide-react";
+import { useEffect } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
+import "./App.css";
+import AppLayout from "./pages/AppLayout";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
-import Settings from "./pages/Settings";
 import Profile from "./pages/Profile";
+import Settings from "./pages/Settings";
 import SignUp from "./pages/Signup";
 import { useAuthStore } from "./store/useAuthStore";
-import { Loader } from "lucide-react";
 
 function App() {
   const { authUser, checkAuth, isCheckingAuth } = useAuthStore() as {
@@ -35,8 +36,14 @@ function App() {
       <Routes>
         <Route
           path="/"
-          element={authUser ? <Home /> : <Navigate to="/login" />}
-        />
+          element={authUser ? <AppLayout /> : <Navigate to="/login" />}
+        >
+          <Route path="" element={<Home />} />
+          <Route
+            path="profile"
+            element={authUser ? <Profile /> : <Navigate to="/login" />}
+          />
+        </Route>
         <Route
           path="/login"
           element={!authUser ? <Login /> : <Navigate to="/" />}
@@ -46,10 +53,7 @@ function App() {
           element={!authUser ? <SignUp /> : <Navigate to="/" />}
         />
         <Route path="/settings" element={<Settings />} />
-        <Route
-          path="/profile"
-          element={authUser ? <Profile /> : <Navigate to="/login" />}
-        />
+
         {/* <Route path="/dashboard" element={<Dashboard />} />
          */}
         {/* <Route path="/logout" element={<Logout />} /> */}
